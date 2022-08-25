@@ -20,9 +20,9 @@ function checkTesla(model, country) {
 	return promise
 }
 
-function notify(model, country) {
+function notify(model, country, VIN) {
 	previousCars = JSON.parse(fs.readFileSync(path.join(__dirname, '../files/previousCars.json')).toString())
-	fs.writeFileSync(path.join(__dirname, '../files/previousCars.json'), JSON.stringify([...country, model]), (err) => {if (err) throw err;})
+	fs.writeFileSync(path.join(__dirname, '../files/previousCars.json'), JSON.stringify([...previousCars, VIN]), (err) => {if (err) throw err;})
 
 	axios.post("https://monkeman.pythonanywhere.com/api/tesla", {model, country})
 }
@@ -38,7 +38,7 @@ function checkTeslas() {
 				if(results.length === 0) return
 				for(k of results) {
 					if (!previousCars.includes(k.VIN)) {
-						notify(i.toUpperCase(), countryCodeMap[k.CountryCode.toLowerCase()])
+						notify(i.toUpperCase(), countryCodeMap[k.CountryCode.toLowerCase()], k.VIN)
 					}
 				}
 			} )
