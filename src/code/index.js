@@ -3,12 +3,12 @@ const path = require('path')
 const axios = require('axios')
 const fs = require("fs")
 
-const models = ["s"]
+const models = ["s", "3"]
 const countries = ["de", "fi"]
 
 const countryCodeMap = {
-	"de": "Saksa",
-	"fi": "Suomi"
+	"de": "Saksassa",
+	"fi": "Suomessa"
 }
 
 function checkTesla(model, country) {
