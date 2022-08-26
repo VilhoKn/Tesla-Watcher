@@ -2,6 +2,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "node-fetch": "^2.6.7",
+    "node-schedule": "^2.1.0",
     "tesla-inventory": "^3.0.98"
   }
 }

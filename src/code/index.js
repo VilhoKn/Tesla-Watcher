@@ -1,4 +1,5 @@
 const teslaInventory = require('tesla-inventory')
+const schedule = require('node-schedule')
 const path = require('path')
 const axios = require('axios')
 const fs = require("fs")
@@ -46,7 +47,13 @@ function checkTeslas() {
 	}
 }
 
-checkTeslas()
+const rule = new schedule.RecurrenceRule()
+rule.minute = 0
+
+const job = schedule.scheduleJob(rule, function(){
+	console.log(`Ran check on ${new Date()}`)
+	checkTeslas()
+  })
 
 
 
