@@ -47,13 +47,13 @@ function checkTeslas() {
 	}
 }
 
-const rule = new schedule.RecurrenceRule()
-rule.minute = 0
+const rule = "*/15 * * * *" 
 
 const job = schedule.scheduleJob(rule, function(){
 	console.log(`Ran check on ${new Date()}`)
 	checkTeslas()
   })
+
 
 
 
