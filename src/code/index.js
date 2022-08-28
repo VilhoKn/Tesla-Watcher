@@ -38,6 +38,7 @@ function checkTeslas() {
 			const promise = checkTesla(i, j)
 			promise.then(results => {
 				if(results.length === 0) return
+				console.log(results.length, countryCodeMap[results[0].CountryCode.toLowerCase()])
 				for(k of results) {
 					if (!previousCars.includes(k.VIN)) {
 						notify(i.toUpperCase(), countryCodeMap[k.CountryCode.toLowerCase()], k.VIN)
