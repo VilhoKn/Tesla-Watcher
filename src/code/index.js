@@ -25,6 +25,7 @@ function notify(model, country, VIN) {
 	previousCars = JSON.parse(fs.readFileSync(path.join(__dirname, '../files/previousCars.json')).toString())
 	fs.writeFileSync(path.join(__dirname, '../files/previousCars.json'), JSON.stringify([...previousCars, VIN]), (err) => {if (err) throw err;})
 
+	console.log("Notified: " + model + " " + country)
 	axios.post("https://monkeman.pythonanywhere.com/api/tesla", {model, country})
 }
 
