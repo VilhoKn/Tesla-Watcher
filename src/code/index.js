@@ -21,12 +21,12 @@ function checkTesla(model, country) {
 	return promise
 }
 
-function notify(model, country, VIN) {
+function notify(model, country, VIN, price, year, color) {
 	previousCars = JSON.parse(fs.readFileSync(path.join(__dirname, '../files/previousCars.json')).toString())
 	fs.writeFileSync(path.join(__dirname, '../files/previousCars.json'), JSON.stringify([...previousCars, VIN]), (err) => {if (err) throw err;})
 
-	console.log("Notified: " + model + " " + country)
-	axios.post("https://monkeman.pythonanywhere.com/api/tesla", {model, country})
+	console.log(`Notified: ${model} ${country} ${price} ${year} ${color}`)
+	axios.post("https://monkeman.pythonanywhere.com/api/tesla", {model, country, price, year, color})
 }
 
 function checkTeslas() {
@@ -38,10 +38,11 @@ function checkTeslas() {
 			const promise = checkTesla(i, j)
 			promise.then(results => {
 				if(results.length === 0) return
-				console.log(results.length, countryCodeMap[results[0].CountryCode.toLowerCase()])
+				console.log(results.length, countryCodeMap[results[0].CountryCode.toLowerCase()], results[0].Model)
 				for(k of results) {
 					if (!previousCars.includes(k.VIN)) {
-						notify(i.toUpperCase(), countryCodeMap[k.CountryCode.toLowerCase()], k.VIN)
+						const color = k.PAINT[0].toLowerCase().replace(/^./, k.PAINT[0][0].toUpperCase())
+						notify(k.Model[1].toUpperCase(), countryCodeMap[k.CountryCode.toLowerCase()], k.VIN, k.Price, k.Year, color)
 					}
 				}
 			} )
@@ -49,15 +50,12 @@ function checkTeslas() {
 	}
 }
 
-const rule = "*/15 * * * *" 
+const rule = "*/15 * * * *"
 
 const job = schedule.scheduleJob(rule, function(){
 	console.log(`Ran check on ${new Date()}`)
 	checkTeslas()
-  })
+})
 
-
-
-
-
-
+console.log(`Started check on ${new Date()}`)
+checkTeslas()
