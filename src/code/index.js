@@ -25,8 +25,12 @@ function notify(model, country, VIN, price, year, color) {
 	previousCars = JSON.parse(fs.readFileSync(path.join(__dirname, '../files/previousCars.json')).toString())
 	fs.writeFileSync(path.join(__dirname, '../files/previousCars.json'), JSON.stringify([...previousCars, VIN]), (err) => {if (err) throw err;})
 
+	const url = `https://www.tesla.com/${country}_${country.toUpperCase()}/${model}/order/${VIN}`
+	model = model[1].toUpperCase()
+	country = countryCodeMap[country]
+
 	console.log(`Notified: ${model} ${country} ${price} ${year} ${color}`)
-	axios.post("https://monkeman.pythonanywhere.com/api/tesla", {model, country, price, year, color})
+	axios.post("https://monkeman.pythonanywhere.com/api/tesla", {model, country, price, year, color, url})
 }
 
 function checkTeslas() {
@@ -42,7 +46,7 @@ function checkTeslas() {
 				for(k of results) {
 					if (!previousCars.includes(k.VIN)) {
 						const color = k.PAINT[0].toLowerCase().replace(/^./, k.PAINT[0][0].toUpperCase())
-						notify(k.Model[1].toUpperCase(), countryCodeMap[k.CountryCode.toLowerCase()], k.VIN, k.Price, k.Year, color)
+						notify(k.Model, k.CountryCode.toLowerCase(), k.VIN, k.Price, k.Year, color)
 					}
 				}
 			} )
